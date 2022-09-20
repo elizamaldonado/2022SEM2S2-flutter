@@ -1,214 +1,426 @@
-import 'package:flutter/material.dart';
-import '../models/boton.models.dart';
-import '../widgets/filaBotonesCalculadora.dart';
+import 'package:calculadora/models/boton.models.dart';
 import 'package:math_expressions/math_expressions.dart';
+import 'package:flutter/material.dart';
+import '../widgets/detalle_calculadora.dart';
+import '../widgets/filaBotonesCalculadora.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
-
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  String textResultados = "hola";
-
+  List<String> datosSeleccion = [];
+  List<String> revertirSeleccion = [];
+  String numero = "";
+  String operacion = "";
+  String resultadoOperacion = "";
+  String operacionCompleta = "";
+  String mensaje = "";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Calculadora")),
+      appBar: AppBar(
+        title: const Text("Calculadora"),
+      ),
       body: Column(
         children: [
           Expanded(
-            flex: 2,
+            flex: 4,
             child: Container(
-              //height: 100,
-              color: Colors.amber,
-              child: Row(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                  color: const Color.fromARGB(57, 107, 107, 107),
+                  border: Border.all(color: Colors.black)),
+              child: Column(
                 children: [
-                  Text("Operaciones"),
+                  Expanded(
+                      flex: 7,
+                      child: Container(
+                        alignment: Alignment.center,
+                        child: Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: detalle(revertirSeleccion),
+                        ),
+                      )),
                 ],
               ),
             ),
           ),
-          Container(
-            height: 100,
-            color: Colors.blueAccent,
-            child: Row(
-              children: [
-                Text(textResultados),
-              ],
+          Expanded(
+            flex: 3,
+            child: Container(
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                  color: const Color.fromARGB(57, 107, 107, 107),
+                  border: Border.all(color: Colors.black)),
+              child: Column(
+                children: [
+                  Expanded(
+                      flex: 1,
+                      child: Container(
+                        alignment: Alignment.centerRight,
+                        child: Padding(
+                          padding: const EdgeInsets.all(15),
+                          child: Text(
+                            operacionCompleta,
+                            style: const TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      )),
+                  Expanded(
+                      flex: 1,
+                      child: Container(
+                        alignment: Alignment.centerRight,
+                        child: Padding(
+                          padding: const EdgeInsets.all(15),
+                          child: Text(
+                            numero,
+                            style: const TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      )),
+                  Expanded(
+                      flex: 1,
+                      child: Padding(
+                        padding: const EdgeInsets.all(15),
+                        child: Text(
+                          mensaje,
+                          style: const TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold),
+                        ),
+                      )),
+                ],
+              ),
             ),
           ),
           Expanded(
             flex: 4,
             child: Container(
-              height: 100,
-              color: Colors.indigo,
+              color: const Color.fromARGB(230, 54, 53, 53),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  //Row(children: [(
-
-                  // )],),
                   filaBotonesCalculadora([
                     BotonModel(
-                        titulo: "%",
-                        metodo: () {
-                          print("porcentaje");
-                        }),
-                    BotonModel(
-                        titulo: "CE",
-                        metodo: () {
-                          print("Eliminar");
-                        }),
-                    BotonModel(
-                        titulo: "C",
-                        metodo: () {
-                          print("eliminarTodo");
-                        }),
-                    BotonModel(
-                        titulo: "<-",
-                        metodo: () {
-                          print("menorIgual");
-                        }),
-                  ]),
-                  filaBotonesCalculadora([
-                    BotonModel(
-                        titulo: "1/x",
-                        metodo: () {
-                          print("fraccionario");
-                        }),
-                    BotonModel(
-                        titulo: "X2",
-                        metodo: () {
-                          print("potencia");
-                        }),
-                    BotonModel(
-                        titulo: "√",
-                        metodo: () {
-                          print("raiz");
-                        }),
-                    BotonModel(
-                        titulo: "/",
-                        metodo: () {
-                          print("dividir");
-                        }),
-                  ]),
-                  filaBotonesCalculadora([
-                    BotonModel(
+                        icon: "",
                         titulo: "7",
                         metodo: () {
                           setState(() {
-                            textResultados += "7";
+                            numero += "7";
+                            mensaje = "";
                           });
                         }),
                     BotonModel(
+                        icon: "",
                         titulo: "8",
                         metodo: () {
                           setState(() {
-                            textResultados += "8";
+                            numero += "8";
+                            mensaje = "";
                           });
                         }),
                     BotonModel(
+                        icon: "",
                         titulo: "9",
                         metodo: () {
                           setState(() {
-                            textResultados += "9";
+                            numero += "9";
+                            mensaje = "";
                           });
                         }),
                     BotonModel(
-                        titulo: "x",
+                        icon: "",
+                        titulo: "÷",
                         metodo: () {
-                          print("multiplicador");
+                          setState(() {
+                            operacion = "/";
+                            if (numero != "") {
+                              operacionCompleta += numero;
+                            }
+                            operacionCompleta += operacion;
+                            mensaje = "";
+                          });
+                        }),
+                    BotonModel(
+                        icon: "",
+                        titulo: "DEL",
+                        metodo: () {
+                          setState(() {
+                            try {
+                              if (numero == "") {
+                                final pos = operacionCompleta.length - 1;
+                                operacionCompleta =
+                                    operacionCompleta.substring(0, pos);
+                              } else {
+                                final pos = numero.length - 1;
+                                numero = numero.substring(0, pos);
+                              }
+                            } on RangeError {
+                              mensaje = "NO HA INGRESADO DATOS PARA CALCULAR";
+                            }
+                          });
+                        }),
+                    BotonModel(
+                        icon: "",
+                        titulo: "C",
+                        metodo: () {
+                          setState(() {
+                            operacion = "";
+                            numero = "";
+                            operacionCompleta = "";
+                            mensaje = "";
+                          });
                         }),
                   ]),
                   filaBotonesCalculadora([
                     BotonModel(
+                        icon: "",
                         titulo: "4",
                         metodo: () {
                           setState(() {
-                            textResultados += "4";
+                            numero += "4";
+                            mensaje = "";
                           });
                         }),
                     BotonModel(
+                        icon: "",
                         titulo: "5",
                         metodo: () {
                           setState(() {
-                            textResultados += "5";
+                            numero += "5";
+                            mensaje = "";
                           });
                         }),
                     BotonModel(
+                        icon: "",
                         titulo: "6",
                         metodo: () {
                           setState(() {
-                            textResultados += "6";
+                            numero += "6";
+                            mensaje = "";
                           });
                         }),
                     BotonModel(
-                        titulo: "-",
+                        icon: "",
+                        titulo: "x",
                         metodo: () {
-                          print("menos");
+                          setState(() {
+                            operacion = "x";
+                            if (numero != "") {
+                              operacionCompleta += numero;
+                            }
+                            operacionCompleta += operacion;
+                            numero = "";
+                          });
+                        }),
+                    BotonModel(
+                        icon: "",
+                        titulo: "(",
+                        metodo: () {
+                          setState(() {
+                            operacion = "(";
+                            if (numero != "") {
+                              operacionCompleta += numero;
+                            }
+                            operacionCompleta += operacion;
+                            numero = "";
+                          });
+                        }),
+                    BotonModel(
+                        icon: "",
+                        titulo: ")",
+                        metodo: () {
+                          setState(() {
+                            operacion = ")";
+                            if (numero != "") {
+                              operacionCompleta += numero;
+                            }
+                            operacionCompleta += operacion;
+                            numero = "";
+                          });
                         }),
                   ]),
                   filaBotonesCalculadora([
                     BotonModel(
+                        icon: "",
                         titulo: "1",
                         metodo: () {
                           setState(() {
-                            textResultados += "1";
+                            numero += "1";
+                            mensaje = "";
                           });
                         }),
                     BotonModel(
+                        icon: "",
                         titulo: "2",
                         metodo: () {
                           setState(() {
-                            textResultados += "2";
+                            numero += "2";
+                            mensaje = "";
                           });
                         }),
                     BotonModel(
+                        icon: "",
                         titulo: "3",
                         metodo: () {
                           setState(() {
-                            textResultados += "3";
+                            numero += "3";
+                            mensaje = "";
                           });
                         }),
                     BotonModel(
-                        titulo: "+",
+                        icon: "",
+                        titulo: "-",
                         metodo: () {
-                          print("mas");
+                          setState(() {
+                            operacion = "-";
+                            if (numero != "") {
+                              operacionCompleta += numero;
+                            }
+                            operacionCompleta += operacion;
+                            numero = "";
+                          });
+                        }),
+                    BotonModel(
+                        icon: "",
+                        titulo: "x^2",
+                        metodo: () {
+                          setState(() {
+                            operacion = "(2)^(";
+                            if (numero != "") {
+                              operacionCompleta += numero;
+                            }
+                            operacionCompleta += operacion;
+                            numero = "";
+                          });
+                        }),
+                    BotonModel(
+                        icon: "",
+                        titulo: "√",
+                        metodo: () {
+                          setState(() {
+                            operacion = "√(";
+                            if (numero != "") {
+                              operacionCompleta += numero;
+                            }
+                            operacionCompleta += operacion;
+                            numero = "";
+                          });
                         }),
                   ]),
                   filaBotonesCalculadora([
                     BotonModel(
-                        titulo: "+/-",
-                        metodo: () {
-                          print("masmenos");
-                        }),
-                    BotonModel(
+                        icon: "",
                         titulo: "0",
                         metodo: () {
                           setState(() {
-                            textResultados += "0";
+                            numero += "0";
+                            mensaje = "";
                           });
                         }),
                     BotonModel(
-                        titulo: ".",
+                        icon: "",
+                        titulo: "%",
                         metodo: () {
-                          print("punto");
+                          setState(() {
+                            if (numero != "") {
+                              double porcentaje = double.parse(numero) / 100;
+                              numero = porcentaje.toString();
+                              operacionCompleta += numero;
+                              numero = "";
+                            }
+                          });
                         }),
                     BotonModel(
+                        icon: "",
+                        titulo: ",",
+                        metodo: () {
+                          setState(() {
+                            operacion = ",";
+                            numero += operacion;
+                          });
+                        }),
+                    BotonModel(
+                        icon: "",
+                        titulo: "+",
+                        metodo: () {
+                          setState(() {
+                            operacion = "+";
+                            if (numero != "") {
+                              operacionCompleta += numero;
+                            }
+                            operacionCompleta += operacion;
+                            numero = "";
+                          });
+                        }),
+                    BotonModel(
+                        icon: "",
                         titulo: "=",
                         metodo: () {
-                          print("igual");
+                          setState(() {
+                            if (numero != "") {
+                              operacionCompleta += numero;
+                            }
+                            String resultadoOperacion = operacionCompleta
+                                .replaceAll("x", "*")
+                                .replaceAll("√", "sqrt")
+                                .replaceAll(",", ".");
+                            try {
+                              Parser p = Parser();
+                              Expression exp = p.parse(resultadoOperacion);
+                              ContextModel cm = ContextModel();
+                              double eval =
+                                  exp.evaluate(EvaluationType.REAL, cm);
+                              resultadoOperacion = eval.toString();
+                              resultadoOperacion =
+                                  validarInfinito(resultadoOperacion);
+                              operacionCompleta += "= $resultadoOperacion";
+                              datosSeleccion
+                                  .add(operacionCompleta.replaceAll(".", ","));
+                              revertirSeleccion =
+                                  datosSeleccion.reversed.toList();
+                              numero = "";
+                              operacion = "";
+                              operacionCompleta =
+                                  resultadoOperacion.replaceAll(".", ",");
+                            } on RangeError catch (e) {
+                              mensaje = "Expresion Matematica Erronea";
+                              operacionCompleta = "";
+                              numero = "";
+                              operacion = "";
+                            } on FormatException catch (e) {
+                              if (e.toString().contains("resultadoOperacion")) {
+                                mensaje = e
+                                    .toString()
+                                    .replaceAll("FormatException:", "");
+                              } else {
+                                mensaje = "Expresion Matematica Erronea";
+                              }
+                              operacionCompleta = "";
+                              numero = "";
+                              operacion = "";
+                            }
+                          });
                         }),
                   ]),
                 ],
               ),
             ),
-          )
+          ),
         ],
       ),
     );
   }
+}
+
+String validarInfinito(String resultadoOperacion) {
+  if (resultadoOperacion == 'Infinity') {
+    throw const FormatException(
+        "El Resultado de la operación tiende a Infinito");
+  }
+  return resultadoOperacion;
 }
